@@ -5,11 +5,15 @@ public class Board(int rows = 8, int columns = 8)
 
     public void PlaceFigure(FigureEnum? figure, (int row, int column) pos)
     {
+        ValidatePosition(pos);
         _board[pos.row, pos.column] = figure ?? FigureEnum.EmptySpace;
     }
 
     public void MoveFigure((int row, int column) prevPos, (int row, int column) newPos)
     {
+        ValidatePosition(prevPos);
+        ValidatePosition(newPos);
+
         var figure = _board[prevPos.row, prevPos.column];
         if (figure is FigureEnum.EmptySpace)
         {
@@ -17,6 +21,14 @@ public class Board(int rows = 8, int columns = 8)
         }
         _board[newPos.row, newPos.column] = figure;
         _board[prevPos.row, prevPos.column] = FigureEnum.EmptySpace;
+    }
+
+    private void ValidatePosition((int row, int column) pos)
+    {
+        if (pos.row < 0 || pos.row >= rows || pos.column < 0 || pos.column >= columns)
+        {
+            throw new ArgumentOutOfRangeException(nameof(pos), $"Position ({pos.row}, {pos.column}) is out of bounds.");
+        }
     }
 
     public void ClearBoard()
