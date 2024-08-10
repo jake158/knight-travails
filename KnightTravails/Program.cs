@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace KnightTravails;
+﻿namespace KnightTravails;
 class Program
 {
     public static void Main()
@@ -10,7 +8,14 @@ class Program
 
         board.PlaceFigure(FigureEnum.Knight, knightPos);
         board.DrawBoard();
-        KnightMoves(knightPos, (5, 5));
+        var path = KnightMoves(knightPos, (0, 0));
+
+        Console.WriteLine();
+        foreach (var step in path)
+        {
+            Console.Write($"{step} ");
+        }
+        Console.WriteLine();
     }
 
     private class Node((int row, int col) pos, Node? predecessor = null)
@@ -19,7 +24,7 @@ class Program
         public Node? Predecessor { get; set; } = predecessor;
     }
 
-    public static (int row, int col)[] KnightMoves((int row, int col) from, (int row, int col) to, int boardRows = 8, int boardCols = 8)
+    public static List<(int row, int col)> KnightMoves((int row, int col) from, (int row, int col) to, int boardRows = 8, int boardCols = 8)
     {
         var visited = new List<(int row, int col)>();
         var queue = new Queue<Node>();
@@ -33,12 +38,42 @@ class Program
             {
                 continue;
             }
-            
+            else if (node.Pos == to)
+            {
+                var path = new List<(int row, int col)>();
+                var curr = node;
+
+                while (curr != null)
+                {
+                    path.Insert(0, curr.Pos);
+                    curr = curr.Predecessor;
+                }
+                return path;
+            }
+
             visited.Add(node.Pos);
             var (row, col) = node.Pos;
-            // Implement
-            Console.WriteLine(visited[0]);
+
+            (int row, int col)[] possibleMoves =
+            [
+                (row - 2, col - 1),
+                (row - 2, col + 1),
+                (row + 2, col - 1),
+                (row + 2, col + 1),
+                (row - 1, col - 2),
+                (row + 1, col - 2),
+                (row - 1, col + 2),
+                (row + 1, col + 2)
+            ];
+
+            foreach (var move in possibleMoves)
+            {
+                if (!(move.row < 0 || move.row >= boardRows || move.col < 0 || move.col >= boardCols))
+                {
+                    queue.Enqueue(new Node(pos: move, predecessor: node));
+                }
+            }
         }
-        return [(0, 0)];
+        return [];
     }
 }
