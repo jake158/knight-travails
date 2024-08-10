@@ -31,7 +31,6 @@ class Program
         }
 
         Console.WriteLine($"Knight has reached the position in {path.Count - 1} steps! Trace:");
-
         foreach (var step in path[..^1])
         {
             Console.Write($"{step} -> ");
@@ -39,24 +38,24 @@ class Program
         Console.Write($"{path[^1]}\n");
     }
 
-    private static (int row, int col) GetPositionFromUser(string positionName)
+    private static (int row, int col) GetPositionFromUser(string positionName, int boardRows = 8, int boardCols = 8)
     {
         Console.WriteLine($"Enter the {positionName} position of the knight (row and column):");
 
         int row, col;
         while (true)
         {
-            Console.Write("Row (0 to 7): ");
-            if (!int.TryParse(Console.ReadLine(), out row) || row < 0 || row > 7)
+            Console.Write($"Row (0 to {boardRows - 1}): ");
+            if (!int.TryParse(Console.ReadLine(), out row) || row < 0 || row >= boardRows)
             {
-                Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
+                Console.WriteLine($"\nInvalid input. Please enter a number between 0 and {boardRows - 1}.");
                 continue;
             }
 
-            Console.Write("Column (0 to 7): ");
-            if (!int.TryParse(Console.ReadLine(), out col) || col < 0 || col > 7)
+            Console.Write($"Column (0 to {boardCols - 1}): ");
+            if (!int.TryParse(Console.ReadLine(), out col) || col < 0 || col >= boardCols)
             {
-                Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
+                Console.WriteLine($"\nInvalid input. Please enter a number between 0 and {boardCols - 1}.");
                 continue;
             }
             break;
