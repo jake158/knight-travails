@@ -1,80 +1,66 @@
-﻿namespace KnightTravails;
+﻿using static KnightTravails.KnightLogic;
+
+namespace KnightTravails;
 class Program
 {
     public static void Main()
     {
         var board = new Board();
-        var knightInitial = (0, 0);
-        var knightNew = (0, 7);
+
+        var knightInitial = GetPositionFromUser("initial");
+        Console.WriteLine();
+        var knightNew = GetPositionFromUser("new");
 
         board.PlaceFigure(FigureEnum.Knight, knightInitial);
+
+        Console.WriteLine("================================");
+        Console.WriteLine($"\nPath from {knightInitial} to {knightNew}:\n");
         board.DrawBoard();
+        Console.WriteLine();
+
         var path = KnightMoves(knightInitial, knightNew);
 
-        Console.WriteLine($"\nPath from {knightInitial} to {knightNew}:");
-        foreach (var step in path)
+        var knightCurrent = knightInitial;
+        foreach (var step in path[1..])
         {
-            Console.Write($"{step}  ");
+            Console.WriteLine($"\nMoving {knightCurrent} to {step}:\n");
+            board.MoveFigure(knightCurrent, step);
+            knightCurrent = step;
+            board.DrawBoard();
+            Console.WriteLine();
         }
-        Console.WriteLine();
-    }
 
-    private class Node((int row, int col) pos, Node? predecessor = null)
-    {
-        public (int row, int col) Pos { get; init; } = pos;
-        public Node? Predecessor { get; set; } = predecessor;
-    }
+        Console.WriteLine($"Knight has reached the position in {path.Count - 1} steps! Trace:");
 
-    public static List<(int row, int col)> KnightMoves((int row, int col) from, (int row, int col) to, int boardRows = 8, int boardCols = 8)
-    {
-        var visited = new List<(int row, int col)>();
-        var queue = new Queue<Node>();
-        queue.Enqueue(new Node(pos: from));
-
-        while (queue.Count > 0)
+        foreach (var step in path[..^1])
         {
-            var node = queue.Dequeue();
+            Console.Write($"{step} -> ");
+        }
+        Console.Write($"{path[^1]}\n");
+    }
 
-            if (visited.Contains(node.Pos))
+    private static (int row, int col) GetPositionFromUser(string positionName)
+    {
+        Console.WriteLine($"Enter the {positionName} position of the knight (row and column):");
+
+        int row, col;
+        while (true)
+        {
+            Console.Write("Row (0 to 7): ");
+            if (!int.TryParse(Console.ReadLine(), out row) || row < 0 || row > 7)
             {
+                Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
                 continue;
             }
-            else if (node.Pos == to)
+
+            Console.Write("Column (0 to 7): ");
+            if (!int.TryParse(Console.ReadLine(), out col) || col < 0 || col > 7)
             {
-                var path = new List<(int row, int col)>();
-                var curr = node;
-
-                while (curr != null)
-                {
-                    path.Insert(0, curr.Pos);
-                    curr = curr.Predecessor;
-                }
-                return path;
+                Console.WriteLine("Invalid input. Please enter a number between 0 and 7.");
+                continue;
             }
-
-            visited.Add(node.Pos);
-            var (row, col) = node.Pos;
-
-            (int row, int col)[] possibleMoves =
-            [
-                (row - 2, col - 1),
-                (row - 2, col + 1),
-                (row + 2, col - 1),
-                (row + 2, col + 1),
-                (row - 1, col - 2),
-                (row + 1, col - 2),
-                (row - 1, col + 2),
-                (row + 1, col + 2)
-            ];
-
-            foreach (var move in possibleMoves)
-            {
-                if (!(move.row < 0 || move.row >= boardRows || move.col < 0 || move.col >= boardCols))
-                {
-                    queue.Enqueue(new Node(pos: move, predecessor: node));
-                }
-            }
+            break;
         }
-        return [];
+        return (row, col);
     }
 }
