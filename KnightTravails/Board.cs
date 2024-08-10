@@ -39,33 +39,40 @@ public class Board(int rows = 8, int columns = 8)
     public void DrawBoard()
     {
         // Print column numbers
-        Console.Write("  ");
+        Console.Write("   ");
         for (int c = 0; c < _board.GetLength(1); c++)
         {
             Console.Write($" {c} ");
         }
         Console.WriteLine();
 
+        ConsoleColor currentBg = Console.BackgroundColor;
+        ConsoleColor currentFg = Console.ForegroundColor;
+
         // Print squares
         for (int i = 0; i < _board.GetLength(0); i++)
         {
-            Console.Write(i + " ");
+            Console.Write($"r{i} ");
 
             for (int j = 0; j < _board.GetLength(1); j++)
             {
+                Console.BackgroundColor = (i + j) % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.Black;
+                Console.ForegroundColor = (i + j) % 2 == 0 ? ConsoleColor.Red : ConsoleColor.White;
                 switch (_board[i, j])
                 {
                     case FigureEnum.EmptySpace:
-                        Console.Write("[ ]");
+                        Console.Write("   ");
                         break;
                     case FigureEnum.Knight:
-                        Console.Write("[♞]");
+                        Console.Write(" ♞ ");
                         break;
                     default:
-                        Console.Write("[?]");
+                        Console.Write(" ? ");
                         break;
                 }
             }
+            Console.BackgroundColor = currentBg;
+            Console.ForegroundColor = currentFg;
             Console.WriteLine();
         }
     }

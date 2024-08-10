@@ -4,16 +4,17 @@ class Program
     public static void Main()
     {
         var board = new Board();
-        var knightPos = (4, 4);
+        var knightInitial = (0, 0);
+        var knightNew = (0, 7);
 
-        board.PlaceFigure(FigureEnum.Knight, knightPos);
+        board.PlaceFigure(FigureEnum.Knight, knightInitial);
         board.DrawBoard();
-        var path = KnightMoves(knightPos, (0, 0));
+        var path = KnightMoves(knightInitial, knightNew);
 
-        Console.WriteLine();
+        Console.WriteLine($"\nPath from {knightInitial} to {knightNew}:");
         foreach (var step in path)
         {
-            Console.Write($"{step} ");
+            Console.Write($"{step}  ");
         }
         Console.WriteLine();
     }
