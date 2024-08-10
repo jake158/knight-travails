@@ -1,15 +1,15 @@
 namespace KnightTravails;
 public static class KnightLogic
 {
-    private class Node((int row, int col) pos, Node? predecessor = null)
+    private class Node(Pos pos, Node? predecessor = null)
     {
-        public (int row, int col) Pos { get; init; } = pos;
+        public Pos Pos { get; init; } = pos;
         public Node? Predecessor { get; set; } = predecessor;
     }
 
-    public static List<(int row, int col)> KnightMoves((int row, int col) from, (int row, int col) to, int boardRows = 8, int boardCols = 8)
+    public static List<Pos> KnightMoves(Pos from, Pos to, int boardRows = 8, int boardCols = 8)
     {
-        var visited = new List<(int row, int col)>();
+        var visited = new List<Pos>();
         var queue = new Queue<Node>();
         queue.Enqueue(new Node(pos: from));
 
@@ -23,7 +23,7 @@ public static class KnightLogic
             }
             else if (node.Pos == to)
             {
-                var path = new List<(int row, int col)>();
+                var path = new List<Pos>();
                 var curr = node;
 
                 while (curr != null)
@@ -53,7 +53,7 @@ public static class KnightLogic
             {
                 if (!(move.row < 0 || move.row >= boardRows || move.col < 0 || move.col >= boardCols))
                 {
-                    queue.Enqueue(new Node(pos: move, predecessor: node));
+                    queue.Enqueue(new Node(pos: new Pos(move.row, move.col), predecessor: node));
                 }
             }
         }

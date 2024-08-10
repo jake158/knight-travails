@@ -14,7 +14,7 @@ class Program
         board.PlaceFigure(FigureEnum.Knight, knightInitial);
 
         Console.WriteLine("================================");
-        Console.WriteLine($"\nPath from {knightInitial} to {knightNew}:\n");
+        Console.WriteLine($"\nPath from ({knightInitial.Row}, {knightInitial.Column}) to ({knightNew.Row}, {knightNew.Column}):\n");
         board.DrawBoard();
         Console.WriteLine();
 
@@ -23,7 +23,7 @@ class Program
         var knightCurrent = knightInitial;
         foreach (var step in path[1..])
         {
-            Console.WriteLine($"\nMoving {knightCurrent} to {step}:\n");
+            Console.WriteLine($"\nMoving ({knightCurrent.Row}, {knightCurrent.Column}) to ({step.Row}, {step.Column}):\n");
             board.MoveFigure(knightCurrent, step);
             knightCurrent = step;
             board.DrawBoard();
@@ -33,12 +33,12 @@ class Program
         Console.WriteLine($"Knight has reached the position in {path.Count - 1} steps! Trace:");
         foreach (var step in path[..^1])
         {
-            Console.Write($"{step} -> ");
+            Console.Write($"({step.Row}, {step.Column}) -> ");
         }
-        Console.Write($"{path[^1]}\n");
+        Console.Write($"({path[^1].Row}, {path[^1].Column})\n");
     }
 
-    private static (int row, int col) GetPositionFromUser(string positionName, int boardRows = 8, int boardCols = 8)
+    private static Pos GetPositionFromUser(string positionName, int boardRows = 8, int boardCols = 8)
     {
         Console.WriteLine($"Enter the {positionName} position of the knight (row and column):");
 
@@ -60,6 +60,6 @@ class Program
             }
             break;
         }
-        return (row, col);
+        return new Pos(row, col);
     }
 }

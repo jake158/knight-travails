@@ -3,31 +3,31 @@ public class Board(int rows = 8, int columns = 8)
 {
     private FigureEnum[,] _board = new FigureEnum[rows, columns];
 
-    public void PlaceFigure(FigureEnum? figure, (int row, int column) pos)
+    public void PlaceFigure(FigureEnum? figure, Pos pos)
     {
         ValidatePosition(pos);
-        _board[pos.row, pos.column] = figure ?? FigureEnum.EmptySpace;
+        _board[pos.Row, pos.Column] = figure ?? FigureEnum.EmptySpace;
     }
 
-    public void MoveFigure((int row, int column) prevPos, (int row, int column) newPos)
+    public void MoveFigure(Pos prevPos, Pos newPos)
     {
         ValidatePosition(prevPos);
         ValidatePosition(newPos);
 
-        var figure = _board[prevPos.row, prevPos.column];
+        var figure = _board[prevPos.Row, prevPos.Column];
         if (figure is FigureEnum.EmptySpace)
         {
-            throw new InvalidOperationException($"Cannot move empty space at pos ({prevPos.row}, {prevPos.column})");
+            throw new InvalidOperationException($"Cannot move empty space at pos ({prevPos.Row}, {prevPos.Column})");
         }
-        _board[newPos.row, newPos.column] = figure;
-        _board[prevPos.row, prevPos.column] = FigureEnum.EmptySpace;
+        _board[newPos.Row, newPos.Column] = figure;
+        _board[prevPos.Row, prevPos.Column] = FigureEnum.EmptySpace;
     }
 
-    private void ValidatePosition((int row, int column) pos)
+    private void ValidatePosition(Pos pos)
     {
-        if (pos.row < 0 || pos.row >= rows || pos.column < 0 || pos.column >= columns)
+        if (pos.Row < 0 || pos.Row >= rows || pos.Column < 0 || pos.Column >= columns)
         {
-            throw new ArgumentOutOfRangeException(nameof(pos), $"Position ({pos.row}, {pos.column}) is out of bounds.");
+            throw new ArgumentOutOfRangeException(nameof(pos), $"Position ({pos.Row}, {pos.Column}) is out of bounds.");
         }
     }
 
